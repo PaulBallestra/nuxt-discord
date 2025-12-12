@@ -18,7 +18,7 @@ const STICKERS = [
 
 </script>
 <template>
-    <ul class="flex items-center justify-center gap-8">
+    <ul class="flex flex-col lg:flex-row items-center justify-center gap-8">
         <li v-for="sticker in STICKERS" :key="sticker.main">
             <StickerCard v-bind="sticker" />
         </li>
