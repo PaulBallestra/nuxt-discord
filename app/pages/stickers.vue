@@ -28,7 +28,7 @@ const shineBackgroundRadialGradient = useMotionTemplate`
     radial-gradient(circle at ${bgXSpring}% ${bgYSpring}%, #FFFFFF, #ADB5BD)
 `;
 const holographicBackgroundConicGradient = useMotionTemplate`
-    conic-gradient(from ${bgRotationSpring}deg at 0 0,#ff6ec7,#ffc36b,#6effd1,#6b7eff,#ff6ec7)
+    conic-gradient(from ${bgRotationSpring}deg at 12% 12%,#ff6ec7,#ffc36b,#6effd1,#6b7eff,#ff6ec7)
 `;
 
 const handleMove = (e: PointerEvent) => {
@@ -74,10 +74,10 @@ const stopAnim = () => {
         <!-- Base sticker -->
         <div class="w-full h-full bg-center bg-cover bg-no-repeat" :style="{ 'background-image': 'url(/sticker.png)' }"></div>
         <motion.div class="shineEffect w-full h-full absolute inset-0" :style="{ background: shineBackgroundRadialGradient }"></motion.div>
-        <motion.div class="holographicEffect w-full h-full absolute inset-0" :style="{background: holographicBackgroundConicGradient}"></motion.div>
         <motion.div class="holographicEffect absolute w-full h-ful inset-0" :style="{background: holographicBackgroundConicGradient}">
             <div class="w-full h-full opacity-50 absolute inset-0" :style="{ backgroundImage: 'url(/holographic-background.jpg)', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }"></div>
         </motion.div>
+        <div class="lighterEffect w-full h-full absolute inset-0"></div>
     </motion.div>
 </template>
 
@@ -109,5 +109,15 @@ const stopAnim = () => {
     mask-size: cover;
     mask-repeat: no-repeat;
     opacity: 1;
+}
+
+.lighterEffect {
+    mix-blend-mode: overlay;
+    -webkit-mask-image: url('/sticker-mask.png');
+    mask-image: url('/sticker-mask.png');
+    mask-size: cover;
+    mask-repeat: no-repeat;
+    background-color: rgb(255, 255, 255);
+    opacity: 0.5;
 }
 </style>
