@@ -44,7 +44,7 @@ const handleMove = (e: PointerEvent) => {
     x.set(-rX);
     y.set(-rY);
 
-    const newRotation = (mouseX / rect.width) * 360; // rotate full circle horizontally
+    const newRotation = (mouseX / rect.width) * STICKER_HALF_ROTATION_RANGE; // rotate full circle horizontally
     bgRotation.set(newRotation);
     bgX.set((mouseX / rect.width) * 100);
     bgY.set((mouseY / rect.height) * 100);
@@ -70,12 +70,11 @@ const stopAnim = () => {
 </script>
 <template>
     <motion.div @pointermove="handleMove" @pointerenter="startAnim" @pointerleave="stopAnim"
-        class="sticker w-[473px] h-[421px]" :class="{ animated: isHover }" :style="{ transform: stickerTransform, boxShadow: stickerBoxshadow }">
+        class="sticker w-[666px] h-[616px]" :style="{ transform: stickerTransform }">
         <!-- Base sticker -->
         <div class="w-full h-full bg-center bg-cover bg-no-repeat" :style="{ 'background-image': 'url(/sticker.png)' }">
         </div>
-        <motion.div class="shineEffect w-full h-full absolute inset-0"
-            :style="{ background: shineBackgroundRadialGradient }"></motion.div>
+        <motion.div class="shineEffect w-full h-full absolute inset-0" :style="{ background: shineBackgroundRadialGradient }"></motion.div>
         <motion.div class="holographicEffect w-full h-full absolute inset-0" :style="{background: holographicBackgroundConicGradient}"></motion.div>
     </motion.div>
 </template>
@@ -88,8 +87,8 @@ const stopAnim = () => {
     background-size: cover;
     background-position: center;
     transform-style: "preserve-3d";
-    perspective: 500px;
-    will-change: "transform, box-shadow, border-radius, filter";
+    perspective: 2500px;
+    will-change: "transform, box-shadow, filter";
 }
 
 .shineEffect {
@@ -98,15 +97,15 @@ const stopAnim = () => {
     mask-image: url('/sticker-mask.png');
     mask-size: cover;
     mask-repeat: no-repeat;
-    opacity: 0.2;
+    opacity: 0.5;
 }
 
 .holographicEffect {
-    mix-blend-mode: overlay;
+    mix-blend-mode: color-burn;
     -webkit-mask-image: url('/sticker-mask.png');
     mask-image: url('/sticker-mask.png');
     mask-size: cover;
     mask-repeat: no-repeat;
-    opacity: 0.7;
+    opacity: 1;
 }
 </style>
