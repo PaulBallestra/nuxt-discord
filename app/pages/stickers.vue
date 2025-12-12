@@ -25,7 +25,7 @@ const shadowYSpring = useSpring(shadowY);
 const stickerTransform = useMotionTemplate`rotateX(${xSpring}deg) rotateY(${ySpring}deg)`;
 const stickerBoxshadow = useMotionTemplate`${shadowXSpring}px ${shadowYSpring}px 25px rgba(50, 50, 93, 0.16)`
 const shineBackgroundRadialGradient = useMotionTemplate`
-    radial-gradient(circle at ${bgXSpring}% ${bgYSpring}%, #FFFFFF, #000000)
+    radial-gradient(circle at ${bgXSpring}% ${bgYSpring}%, #FFFFFF, #ADB5BD)
 `;
 const holographicBackgroundConicGradient = useMotionTemplate`
     conic-gradient(from ${bgRotationSpring}deg at 0 0,#ff6ec7,#ffc36b,#6effd1,#6b7eff,#ff6ec7)
@@ -97,11 +97,11 @@ const stopAnim = () => {
     mask-image: url('/sticker-mask.png');
     mask-size: cover;
     mask-repeat: no-repeat;
-    opacity: 0.5;
+    opacity: 1;
 }
 
 .holographicEffect {
-    mix-blend-mode: color-burn;
+    mix-blend-mode: multiply;
     -webkit-mask-image: url('/sticker-mask.png');
     mask-image: url('/sticker-mask.png');
     mask-size: cover;
