@@ -10,7 +10,7 @@ const x = useMotionValue<number>(0)
 const y = useMotionValue<number>(0)
 const bgY = useMotionValue<number>(50);
 const bgX = useMotionValue<number>(50);
-const bgRotation = useMotionValue<number>(32);
+const bgRotation = useMotionValue<number>(180);
 const shadowX = useMotionValue<number>(0);
 const shadowY = useMotionValue<number>(0);
 
@@ -44,7 +44,7 @@ const handleMove = (e: PointerEvent) => {
     x.set(-rX);
     y.set(-rY);
 
-    const newRotation = (mouseX / rect.width) * STICKER_HALF_ROTATION_RANGE; // rotate full circle horizontally
+    const newRotation = (mouseX / rect.width) * 360; // rotate full circle horizontally
     bgRotation.set(newRotation);
     bgX.set((mouseX / rect.width) * 100);
     bgY.set((mouseY / rect.height) * 100);
@@ -72,10 +72,15 @@ const stopAnim = () => {
     <motion.div @pointermove="handleMove" @pointerenter="startAnim" @pointerleave="stopAnim"
         class="sticker w-[666px] h-[616px]" :style="{ transform: stickerTransform }">
         <!-- Base sticker -->
-        <div class="w-full h-full bg-center bg-cover bg-no-repeat" :style="{ 'background-image': 'url(/sticker.png)' }"></div>
-        <motion.div class="shineEffect w-full h-full absolute inset-0" :style="{ background: shineBackgroundRadialGradient }"></motion.div>
-        <motion.div class="holographicEffect absolute w-full h-ful inset-0" :style="{background: holographicBackgroundConicGradient}">
-            <div class="w-full h-full opacity-50 absolute inset-0" :style="{ backgroundImage: 'url(/holographic-background.jpg)', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }"></div>
+        <div class="w-full h-full bg-center bg-cover bg-no-repeat" :style="{ 'background-image': 'url(/sticker.png)' }">
+        </div>
+        <motion.div class="shineEffect w-full h-full absolute inset-0"
+            :style="{ background: shineBackgroundRadialGradient }"></motion.div>
+        <motion.div class="holographicEffect absolute w-full h-ful inset-0"
+            :style="{ background: holographicBackgroundConicGradient }">
+            <div class="w-full h-full opacity-50 absolute inset-0"
+                :style="{ backgroundImage: 'url(/holographic-background.jpg)', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }">
+            </div>
         </motion.div>
         <div class="lighterEffect w-full h-full absolute inset-0"></div>
     </motion.div>
@@ -99,6 +104,7 @@ const stopAnim = () => {
     mask-image: url('/sticker-mask.png');
     mask-size: cover;
     mask-repeat: no-repeat;
+    filter: saturate(2);
     opacity: 1;
 }
 
@@ -108,6 +114,7 @@ const stopAnim = () => {
     mask-image: url('/sticker-mask.png');
     mask-size: cover;
     mask-repeat: no-repeat;
+    filter: saturate(1.7) contrast(1.2);
     opacity: 1;
 }
 
@@ -118,6 +125,7 @@ const stopAnim = () => {
     mask-size: cover;
     mask-repeat: no-repeat;
     background-color: rgb(255, 255, 255);
+    filter: saturate(1) hue-rotate(180);
     opacity: 0.5;
 }
 </style>
