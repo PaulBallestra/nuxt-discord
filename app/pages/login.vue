@@ -5,7 +5,7 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 const loading = ref(false)
 const message = ref<string | null>(null)
 const errorMsg = ref<string | null>(null)
-// const supabase = useSupabaseClient()
+const supabase = useSupabaseClient()
 
 const schema = v.object({
   email: v.pipe(v.string(), v.email('Invalid email')),
@@ -14,7 +14,7 @@ const schema = v.object({
 
 type Schema = v.InferOutput<typeof schema>
 
-const state = ref({
+const state = reactive({
   email: '',
   password: ''
 })
@@ -30,20 +30,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   errorMsg.value = null
   message.value = null
 
-  // const { error } = await supabase.auth.signInWithOtp({
-  //   email: state.email,
-  //   options: {
-  //     emailRedirectTo: 'http://localhost:3000/confirm',
-  //   }
-  // })
+  const { error } = await supabase.auth.signInWithOtp({
+    email: state.email,
+    options: {
+      emailRedirectTo: 'http://localhost:3000/confirm',
+    }
+  })
 
   loading.value = false
 
-  // if (error) {
-  //   errorMsg.value = error.message
-  // } else {
-  //   message.value = "Un email de connexion vient d'être envoyé."
-  // }
+  if (error) {
+    errorMsg.value = error.message
+  } else {
+    message.value = "Un email de connexion vient d'être envoyé."
+  }
 }
 </script>
 

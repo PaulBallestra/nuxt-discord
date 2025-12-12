@@ -1,12 +1,12 @@
 <script setup lang="ts">
-// const supabase = useSupabaseClient()
+const supabase = useSupabaseClient()
 const email = ref('')
 
 const requestResetPassword = async () => {
-  // const { data, error } = await supabase.auth.resetPasswordForEmail(email.value, {
-  //   redirectTo: 'https://example.com/password/update',
-  // })
-  // if (error) console.log(error)
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email.value, {
+    redirectTo: 'http://localhost:3000/password/update',
+  })
+  if (error) console.log(error)
 }
 </script>
 
