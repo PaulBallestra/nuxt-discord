@@ -13,9 +13,6 @@ const sticker = defineProps<{
   height: number;
 }>();
 
-const STICKER_HALF_ROTATION_RANGE = 16;
-const STICKER_ROTATION_RANGE = 32;
-
 const x = useMotionValue(0);
 const y = useMotionValue(0);
 const bgX = useMotionValue(50);
@@ -80,7 +77,6 @@ const handleMove = (e: PointerEvent) => {
   shadowY.set(py * 8);
 };
 
-
 const handleLeave = () => {
   x.set(0);
   y.set(0);
@@ -93,8 +89,8 @@ const handleLeave = () => {
 </script>
 
 <template>
-  <motion.div key="" @pointermove="handleMove" @pointerleave="handleLeave" class="sticker relative"
-    :style="{ transform: stickerTransform, width: `${sticker.width}px`, height: `${sticker.height}px` }">
+  <motion.div key="" @pointermove="handleMove" @pointerleave="handleLeave" class="sticker relative rounded-2xl"
+    :style="{ transform: stickerTransform, boxShadow: boxShadow, width: `${sticker.width}px`, height: `${sticker.height}px` }">
     <motion.div class="w-full h-full bg-center bg-cover bg-no-repeat"
       :style="{ backgroundImage: `url(/${sticker.main})`, boxShadow: boxShadow }">
     </motion.div>
@@ -132,7 +128,6 @@ const handleLeave = () => {
   </motion.div>
 </template>
 
-
 <style>
 .sticker {
   position: relative;
@@ -162,6 +157,6 @@ const handleLeave = () => {
   background-position: center;
   background-color: rgb(255, 255, 255);
   filter: saturate(1);
-  opacity: 0.5;
+  opacity: 1;
 }
 </style>
