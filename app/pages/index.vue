@@ -14,23 +14,47 @@ const { data: instruments } = await useAsyncData('instrument', async () => {
     <li v-for="instrument in instruments" :key="instrument.id">{{ instrument.name }}</li>
   </ul>
 
-  <div 
+<div 
     @pointerenter="isHover = true"
     @pointerleave="isHover = false"
-    class="sticker w-[473px] h-[421px]"
-    :class="{ animated: isHover }"
-    style="
-    --base-img: url('/sticker.png');
-    --mask-img: url('/sticker-mask.png');
-  ">
-    <div   
-    class="shineBackground w-[473px] h-[421px]"></div>
-    <div class="holographicBackground w-[473px] h-[421px]"></div>
+    class="sticker relative w-[473px] h-[421px] overflow-hidden"
+  >
+    <!-- Base sticker -->
+    <div
+      class="w-full h-full bg-center bg-cover bg-no-repeat"
+      :style="{ 'background-image': 'url(/sticker.png)' }"
+    ></div>
+
+    <!-- Shine effect -->
+    <div
+      v-if="isHover"
+      class="absolute inset-0 animate-shine"
+      :style="{
+        '-webkit-mask-image': 'url(/sticker-mask.png)',
+        'mask-image': 'url(/sticker-mask.png)',
+        'mask-repeat': 'no-repeat',
+        'mask-size': 'cover',
+        'background': 'linear-gradient(120deg, rgba(255,255,255,0.4), rgba(255,255,255,0))'
+      }"
+    ></div>
+
+    <!-- Holographic effect -->
+    <!-- <div
+      v-if="isHover"
+      class="absolute inset-0 animate-holo"
+      :style="{
+        '-webkit-mask-image': 'url(/sticker-mask.png)',
+        'mask-image': 'url(/sticker-mask.png)',
+        'mask-repeat': 'no-repeat',
+        'mask-size': 'cover',
+        'background': 'conic-gradient(from 0deg, #f0f, #0ff, #ff0, #f0f)'
+      }"
+    ></div> -->
   </div>
 
 </template>
 
-<style unscoped>
+<style>
 .sticker {
   position: relative;
   overflow: hidden;
@@ -40,7 +64,7 @@ const { data: instruments } = await useAsyncData('instrument', async () => {
 }
 
 .sticker.animated {
-  background: red;
+  /* background: red; */
   transform: scale(1.03);
 }
 
@@ -52,9 +76,9 @@ const { data: instruments } = await useAsyncData('instrument', async () => {
   background-image: var(--mask-img);
 
   /* important: only animate/affect this layer */
-  mix-blend-mode: multiply;
+  mix-blend-mode: screen;
   /* or multiply / lighten depending on mask type */
-  opacity: 0.9;
+  opacity: 0.1;
   background-size: cover;
   background-position: center;
   pointer-events: none;
@@ -71,4 +95,22 @@ const { data: instruments } = await useAsyncData('instrument', async () => {
   mix-blend-mode: color-burn;
   background: conic-gradient(from 70deg at 0 0, #ff6ec7, #ffc36b, #6effd1, #6b7eff, #ff6ec7)
 }
+
+/* Shine animation: moves diagonally across the sticker */
+/* @keyframes shineMove {
+  0% { transform: translateX(-100%) rotate(20deg); }
+  100% { transform: translateX(100%) rotate(20deg); }
+}
+.animate-shine {
+  animation: shineMove 1.5s linear infinite;
+} */
+
+/* Holographic gradient rotation */
+/* @keyframes holoRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.animate-holo {
+  animation: holoRotate 3s linear infinite;
+} */
 </style>
