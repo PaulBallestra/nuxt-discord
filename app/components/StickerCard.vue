@@ -86,6 +86,7 @@ const handleLeave = () => {
   shadowX.set(0);
   shadowY.set(0);
 };
+
 </script>
 
 <template>
@@ -115,7 +116,8 @@ const handleLeave = () => {
         maskRepeat: 'no-repeat',
         backgroundImage: 'url(/holographic-background.jpg)',
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover'
+        backgroundSize: 'cover',
+        // mixBlendMode: 'multiply'
       }">
       </div>
     </motion.div>
@@ -140,7 +142,7 @@ const handleLeave = () => {
 }
 
 .shineEffect {
-  mix-blend-mode: multiply;
+  mix-blend-mode: saturation;
   filter: saturate(2);
   opacity: 1;
 }

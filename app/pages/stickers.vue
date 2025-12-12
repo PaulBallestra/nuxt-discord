@@ -13,7 +13,13 @@ const STICKERS = [
         mask: 'sticker-mask.png',
         width: 666,
         height: 616
-    }
+    },
+    {
+        main: 'skateboard-sticker.png',
+        mask: 'skateboard-sticker-mask.png',
+        width: 500,
+        height: 500
+    },
 ]
 
 </script>
