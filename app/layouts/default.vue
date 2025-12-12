@@ -1,6 +1,6 @@
 <template>
   <UApp>
-    <div>
+    <div class="bg-black">
       <div class="h-[2vh]">
         <p>Some default layout content shared across all pages</p>
       </div>

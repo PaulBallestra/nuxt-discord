@@ -44,29 +44,42 @@ const holographicBackgroundConicGradient = useMotionTemplate`
   conic-gradient(from ${bgRotationSpring}deg at 12% 12%,#ff6ec7,#ffc36b,#6effd1,#6b7eff,#ff6ec7)
 `;
 
+const boxShadow = useMotionTemplate`${shadowXSpring}px ${shadowYSpring}px 25px rgba(50, 50, 93, 0.16)`
+
 const handleMove = (e: PointerEvent) => {
-  const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+  const target = e.currentTarget as HTMLDivElement;
+  const rect = target.getBoundingClientRect();
+
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
 
-  const rX =
-    ((mouseY / rect.height) * STICKER_ROTATION_RANGE -
-      STICKER_HALF_ROTATION_RANGE) *
-    -1;
-  const rY =
-    (mouseX / rect.width) * STICKER_ROTATION_RANGE -
-    STICKER_HALF_ROTATION_RANGE;
+  // Normalize to -1 → 1
+  const px = (mouseX / rect.width) * 2 - 1;
+  const py = (mouseY / rect.height) * 2 - 1;
 
-  x.set(-rX);
-  y.set(-rY);
+  // More natural weighting (slightly stronger X tilt)
+  const ROT_X = 10;  // tilt up/down
+  const ROT_Y = 16;  // tilt left/right
 
-  bgRotation.set((mouseX / rect.width) * 360);
-  bgX.set((mouseX / rect.width) * 100);
-  bgY.set((mouseY / rect.height) * 100);
+  const rX = py * -ROT_X; // invert so top tilts back
+  const rY = px * ROT_Y;
 
-  shadowX.set((mouseX / rect.width - 0.5) * 20);
-  shadowY.set((mouseY / rect.height - 0.5) * 20);
+  // Smooth 3D tilt
+  x.set(rX);
+  y.set(rY);
+
+  // Shine/holo moves slower for realism (parallax)
+  bgX.set(50 + px * 20);
+  bgY.set(50 + py * 20);
+
+  // Make rotation softer (fake FRAMER holographic spin)
+  bgRotation.set((px + 1) * 180);
+
+  // Softer shadow (not symmetric)
+  shadowX.set(px * 8);
+  shadowY.set(py * 8);
 };
+
 
 const handleLeave = () => {
   x.set(0);
@@ -82,8 +95,9 @@ const handleLeave = () => {
 <template>
   <motion.div key="" @pointermove="handleMove" @pointerleave="handleLeave" class="sticker relative"
     :style="{ transform: stickerTransform, width: `${sticker.width}px`, height: `${sticker.height}px` }">
-    <div class="w-full h-full bg-center bg-cover bg-no-repeat" :style="{ 'background-image': `url(/${sticker.main})` }">
-    </div>
+    <motion.div class="w-full h-full bg-center bg-cover bg-no-repeat"
+      :style="{ backgroundImage: `url(/${sticker.main})`, boxShadow: boxShadow }">
+    </motion.div>
     <motion.div class="shineEffect w-full h-full absolute inset-0" :style="{
       background: shineBackgroundRadialGradient,
       maskImage: `url(/${sticker.mask})`,
@@ -126,8 +140,7 @@ const handleLeave = () => {
   background-image: var(--base-img);
   background-size: cover;
   background-position: center;
-  transform-style: "preserve-3d";
-  perspective: 2500px;
+  transform-style: preserve-3d;
   will-change: "transform, box-shadow, filter";
 }
 

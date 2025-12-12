@@ -25,4 +25,8 @@ const STICKERS = [
     </ul>
 </template>
 
-<style></style>
+<style>
+ul {
+    perspective: 1200px;
+}
+</style>
