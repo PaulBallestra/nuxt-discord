@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/supabase'],
+  modules: ['@nuxt/ui'],
   css: [
     './app/assets/global.css'
   ],
@@ -13,13 +13,13 @@ export default defineNuxtConfig({
       tailwindcss(),
     ]
   },
-  supabase: {
-    redirectOptions: {
-      login: '/login',
-      callback: '/confirm',
-      include: undefined,
-      exclude: ['/'],
-      saveRedirectToCookie: false,
-    }
-  }
+  // supabase: {
+  //   redirectOptions: {
+  //     login: '/login',
+  //     callback: '/confirm',
+  //     include: undefined,
+  //     exclude: ['/'],
+  //     saveRedirectToCookie: false,
+  //   }
+  // }
 })
