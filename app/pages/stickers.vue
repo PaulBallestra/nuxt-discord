@@ -72,10 +72,12 @@ const stopAnim = () => {
     <motion.div @pointermove="handleMove" @pointerenter="startAnim" @pointerleave="stopAnim"
         class="sticker w-[666px] h-[616px]" :style="{ transform: stickerTransform }">
         <!-- Base sticker -->
-        <div class="w-full h-full bg-center bg-cover bg-no-repeat" :style="{ 'background-image': 'url(/sticker.png)' }">
-        </div>
+        <div class="w-full h-full bg-center bg-cover bg-no-repeat" :style="{ 'background-image': 'url(/sticker.png)' }"></div>
         <motion.div class="shineEffect w-full h-full absolute inset-0" :style="{ background: shineBackgroundRadialGradient }"></motion.div>
         <motion.div class="holographicEffect w-full h-full absolute inset-0" :style="{background: holographicBackgroundConicGradient}"></motion.div>
+        <motion.div class="holographicEffect absolute w-full h-ful inset-0" :style="{background: holographicBackgroundConicGradient}">
+            <div class="w-full h-full relative inset-0" :style="{ backgroundImage: 'url(/holographic-background.jpg)', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }"></div>
+        </motion.div>
     </motion.div>
 </template>
 
@@ -101,7 +103,7 @@ const stopAnim = () => {
 }
 
 .holographicEffect {
-    mix-blend-mode: multiply;
+    mix-blend-mode: saturation;
     -webkit-mask-image: url('/sticker-mask.png');
     mask-image: url('/sticker-mask.png');
     mask-size: cover;
