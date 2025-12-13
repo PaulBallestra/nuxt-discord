@@ -16,6 +16,7 @@ function onMouseMove(e) {
 
 onMounted(async() => {
     const fragmentShaderSource = await fetch('/shaders/fragment.glsl').then(r => r.text())
+    const fragmentHoloShaderSource = await fetch('/shaders/holofragment.glsl').then(r => r.text())
     const vertexShaderSource = await fetch('/shaders/vertex.glsl').then(r => r.text())
 
     gl = canvas.value.getContext("webgl");
@@ -32,7 +33,7 @@ onMounted(async() => {
     }
 
     const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+    const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentHoloShaderSource);
 
     const baseTexture = loadTexture(gl, stickerUrl);
     const maskTexture = loadTexture(gl, stickerMaskUrl);
@@ -122,23 +123,33 @@ function loadTexture(gl, url) {
 }
 
 function render() {
+    const currentTime = performance.now() * 0.001; // seconds
+
+    // Pass mouse position
     gl.uniform2f(mouseLocation, mouse.x, mouse.y);
+    
+    const timeLocation = gl.getUniformLocation(program, "u_time");
+
+
+    // Pass time
+    gl.uniform1f(timeLocation, currentTime);
+
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     requestAnimationFrame(render);
 }
 </script>
 
 <template>
-    <div class="shader-container" @mousemove="onMouseMove">
+    <div class="sticker-container" @mousemove="onMouseMove">
         <canvas ref="canvas" width="666px" height="616px"></canvas>
     </div>
 </template>
 
 <style scoped>
-.shader-container {
+.sticker-container {
     width: 666px;
     height: 616px;
-    background-color: white;
+    background-color: black;
 }
 
 canvas {
