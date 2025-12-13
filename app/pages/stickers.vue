@@ -3,20 +3,20 @@ import StickerCard from '~/components/StickerCard.vue';
 
 const STICKERS = [
     {
-        main: 'space-sticker.png',
-        mask: 'space-sticker-mask.png',
+        main: 'images/space-sticker.png',
+        mask: 'images/space-sticker-mask.png',
         width: 513,
         height: 430,
     },
     {
-        main: 'sticker.png',
-        mask: 'sticker-mask.png',
+        main: 'images/sticker.png',
+        mask: 'images/sticker-mask.png',
         width: 666,
         height: 616
     },
     {
-        main: 'skateboard-sticker.png',
-        mask: 'skateboard-sticker-mask.png',
+        main: 'images/skateboard-sticker.png',
+        mask: 'images/skateboard-sticker-mask.png',
         width: 500,
         height: 500
     },

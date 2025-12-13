@@ -5,7 +5,7 @@ import glsl from 'vite-plugin-glsl'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/supabase', '@nuxt/ui'],
+  modules: ['@nuxtjs/supabase', '@nuxt/ui', '@tresjs/nuxt', '@nuxt/devtools'],
   css: [
     './app/assets/styles/global.css'
   ],
@@ -15,6 +15,10 @@ export default defineNuxtConfig({
       glsl(),
       tailwindcss(),
     ]
+  },
+  tres: {
+    glsl: true,
+    devtools: true,
   },
   supabase: {
     redirectOptions: {

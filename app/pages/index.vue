@@ -30,8 +30,8 @@ const { data: instruments } = await useAsyncData('instrument', async () => {
       v-if="isHover"
       class="absolute inset-0 animate-shine"
       :style="{
-        '-webkit-mask-image': 'url(/sticker-mask.png)',
-        'mask-image': 'url(/sticker-mask.png)',
+        '-webkit-mask-image': 'url(/images/sticker-mask.png)',
+        'mask-image': 'url(/images/sticker-mask.png)',
         'mask-repeat': 'no-repeat',
         'mask-size': 'cover',
         'background': 'linear-gradient(120deg, rgba(255,255,255,0.4), rgba(255,255,255,0))'
