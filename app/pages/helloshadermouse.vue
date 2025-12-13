@@ -1,7 +1,5 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import vertexShaderSource from '~/assets/shaders/vertex.glsl'
-import fragmentShaderSource from '~/assets/shaders/fragment.glsl'
 
 const canvas = ref(null);
 let gl, program;
@@ -22,13 +20,57 @@ onMounted(() => {
 
     canvas.value.width = canvas.value.clientWidth;
     canvas.value.height = canvas.value.clientHeight;
-    gl.viewport(0, 0, canvas.value.width, canvas.value.height);
+
+    const vertexShaderSource = `
+    attribute vec2 position;
+    void main() {
+      gl_Position = vec4(position, 0.0, 1.0);
+    }
+  `;
+
+    const fragmentShaderSource = `
+    precision mediump float;
+    uniform vec2 u_resolution;
+    uniform vec2 u_mouse;
+    uniform sampler2D u_tex0;
+    uniform sampler2D u_tex1;
+
+    void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution;
+
+        // rotate 180° X-axis
+        uv.y = 1.0 - uv.y;
+
+        vec3 base = texture2D(u_tex0, uv).rgb;
+        float mask = texture2D(u_tex1, uv).r;
+
+        float d = distance(gl_FragCoord.xy, u_mouse);
+        float shine = smoothstep(250.0, 0.0, d);
+
+        // shine only where mask is white
+        float maskedShine = shine * mask;
+
+        vec3 shineColor = vec3(1.0);
+
+        vec3 finalColor = base + maskedShine * shineColor;
+
+        gl_FragColor = vec4(finalColor, 1.0);
+    }
+  `;
+
+    function createShader(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        return shader;
+    }
 
     const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
 
     const baseTexture = loadTexture(gl, stickerUrl);
     const maskTexture = loadTexture(gl, stickerMaskUrl);
+
 
     program = gl.createProgram();
     gl.attachShader(program, vertexShader);
@@ -50,7 +92,7 @@ onMounted(() => {
     );
 
     const position = gl.getAttribLocation(program, "position");
-    // gl.enableVertexAttribArray(position);
+    gl.enableVertexAttribArray(position);
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
     const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
@@ -76,14 +118,6 @@ onMounted(() => {
 
     render();
 });
-
-function createShader(type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-
-    return shader;
-}
 
 function loadTexture(gl, url) {
     const texture = gl.createTexture();
