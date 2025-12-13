@@ -90,7 +90,7 @@ const handleLeave = () => {
 </script>
 
 <template>
-  <motion.div key="" @pointermove="handleMove" @pointerleave="handleLeave" class="sticker relative rounded-2xl"
+  <motion.div @pointermove="handleMove" @pointerleave="handleLeave" class="sticker relative rounded-2xl"
     :style="{ transform: stickerTransform, boxShadow: boxShadow, width: `${sticker.width}px`, height: `${sticker.height}px` }">
     <motion.div class="w-full h-full bg-center bg-cover bg-no-repeat"
       :style="{ backgroundImage: `url(/${sticker.main})`, boxShadow: boxShadow }">
