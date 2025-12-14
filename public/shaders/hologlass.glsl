@@ -4,12 +4,9 @@ precision mediump float;
 
 #define PI 3.14159265358979323846
 
-
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
-uniform sampler2D u_tex0;
-uniform sampler2D u_tex1;
 
 // PATTERN
 vec2 rotate2D (vec2 _st, float _angle) {
@@ -89,26 +86,23 @@ vec3 hsb2rgb( in vec3 c ){
     return c.z * mix(vec3(1.0), rgb, c.y);
 }
 
-void main() {
-    vec2 uv = gl_FragCoord.xy / u_resolution;
-    vec3 backgroundGradient = vec3(1.0);
-    vec3 shineColor = vec3(1.0, 1.0, 1.0);
+void main(){
+    vec2 st = gl_FragCoord.xy/u_resolution;
+    vec3 color = vec3(1.0);
+    
+    float d = distance(st, u_mouse);
+    float shine = smoothstep(250., 0.0, d);
 
-    // rotate 180° X-axis
-    uv.g = 1.0 - uv.g;
-
-    backgroundGradient = hsb2rgb(vec3(1.0));
-
-    vec3 base = texture2D(u_tex0, uv).rgb;
-    float mask = texture2D(u_tex1, uv).r;
-
-    float d = distance(gl_FragCoord.rg, u_mouse);
-    float shine = smoothstep(250.0, 0.0, d);
-
-    // shine only where mask is white
-    float maskedShine = shine * mask;
-    // vec3 finalColor = (base + maskedShine * shineColor) + (backgroundGradient * mask * shineColor);
-    vec3 finalColor = base + maskedShine * shineColor;
-
-    gl_FragColor = vec4(1.0 / finalColor , 1.0);
+    // We map x (0.0 - 1.0) to the hue (0.0 - 1.0)
+    // And the y (0.0 - 1.0) to the brightness
+    color = hsb2rgb(vec3(st.x + shine/6., clamp(u_mouse.y/500., 0.7, 0.9), clamp(u_mouse.x/500., 2.0, 2.2))) / clamp(shine, 0.8, 1.020);
+    
+    st = tile(st,5.0);
+    st = rotateTilePattern(st);
+    st = tile(st,3.0);
+    st = rotate2D(st,-PI*clamp(u_mouse.x/500., 0.1, 0.5)*clamp(u_mouse.y/500., 0.1, 0.2)); //0.1, 0.5
+    
+    vec3 pattern = vec3(step(st.x,st.y));
+    
+    gl_FragColor = vec4(1.5 / (color + pattern),1.0);
 }

@@ -36,12 +36,13 @@ const canvas = ref(null);
 let gl, program;
 let mouseLocation;
 let mouse = { x: 0, y: 0 };
-let stickerUrl = '/images/space-sticker.png';
-let stickerMaskUrl = '/images/space-sticker-mask.png';
+let stickerUrl = '/images/sticker-lune.png';
+let stickerMaskUrl = '/images/sticker-lune-mask.png';
 
 onMounted(async () => {
     const fragmentShaderSource = await fetch('/shaders/fragment.glsl').then(r => r.text())
     const fragmentHoloShaderSource = await fetch('/shaders/holofragment.glsl').then(r => r.text())
+    const fragmentHoloGlassShaderSource = await fetch('/shaders/hologlass.glsl').then(r => r.text())
     const vertexShaderSource = await fetch('/shaders/vertex.glsl').then(r => r.text())
 
     gl = canvas.value.getContext("webgl");
