@@ -3,6 +3,7 @@ precision mediump float;
 #endif
 
 uniform vec2 u_resolution;
+uniform vec2 u_mouse;
 uniform float u_time;
 
 // Cellular noise ("Worley noise") in 2D in GLSL.
@@ -53,6 +54,9 @@ vec2 cellular2x2(vec2 P) {
 #endif
 }
 
+vec3 colorA = vec3(0.149,0.141,0.912);
+vec3 colorB = vec3(1.000,0.833,0.224);
+
 void main(void) {
 	vec2 st = gl_FragCoord.xy/u_resolution.xy;
 	st = (st-.5)*.75+.5;
@@ -68,7 +72,11 @@ void main(void) {
 
 	vec2 pos = st-.5;
 	float a = dot(pos,pos)-u_time*0.1;
-	float n = step(abs(sin(a*3.1415*5.)),F.x*2.);
+	// float a = dot(pos,pos)-5.*0.1;
+	float noiseValue = step(abs(sin(a*3.1415*5.)),F.x*2.);
+    float d = distance(gl_FragCoord.rg, u_mouse);
 
-	gl_FragColor = vec4(n, n, n, 1.0);
+	vec3 color = mix(colorA, colorB, noiseValue);
+    
+	gl_FragColor = vec4(color, 1.0);
 }

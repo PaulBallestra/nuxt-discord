@@ -33,7 +33,7 @@ onMounted(async() => {
     }
 
     const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentHoloShaderSource);
+    const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
 
     const baseTexture = loadTexture(gl, stickerUrl);
     const maskTexture = loadTexture(gl, stickerMaskUrl);
@@ -129,7 +129,6 @@ function render() {
     gl.uniform2f(mouseLocation, mouse.x, mouse.y);
     
     const timeLocation = gl.getUniformLocation(program, "u_time");
-
 
     // Pass time
     gl.uniform1f(timeLocation, currentTime);
