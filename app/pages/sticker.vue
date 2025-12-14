@@ -1,5 +1,36 @@
 <script setup>
+import { motion, useMotionTemplate, useMotionValue, useSpring } from "motion-v";
 import { onMounted, ref } from "vue";
+
+const x = useMotionValue(0);
+const y = useMotionValue(0);
+const bgX = useMotionValue(50);
+const bgY = useMotionValue(50);
+const bgRotation = useMotionValue(180);
+const shadowX = useMotionValue(0);
+const shadowY = useMotionValue(0);
+
+const xSpring = useSpring(x);
+const ySpring = useSpring(y);
+const bgXSpring = useSpring(bgX);
+const bgYSpring = useSpring(bgY);
+const bgRotationSpring = useSpring(bgRotation);
+const shadowXSpring = useSpring(shadowX);
+const shadowYSpring = useSpring(shadowY);
+
+const stickerTransform = useMotionTemplate`
+  rotateX(${xSpring}deg) rotateY(${ySpring}deg)
+`;
+
+const shineBackgroundRadialGradient = useMotionTemplate`
+  radial-gradient(circle at ${bgXSpring}% ${bgYSpring}%, #FFFFFF, #ADB5BD)
+`;
+
+const holographicBackgroundConicGradient = useMotionTemplate`
+  conic-gradient(from ${bgRotationSpring}deg at 12% 12%,#ff6ec7,#ffc36b,#6effd1,#6b7eff,#ff6ec7)
+`;
+
+const boxShadow = useMotionTemplate`${shadowXSpring}px ${shadowYSpring}px 25px rgba(50, 50, 93, 0.16)`
 
 const canvas = ref(null);
 let gl, program;
@@ -8,13 +39,7 @@ let mouse = { x: 0, y: 0 };
 let stickerUrl = '/images/space-sticker.png';
 let stickerMaskUrl = '/images/space-sticker-mask.png';
 
-function onMouseMove(e) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = rect.height - (e.clientY - rect.top); // flip Y for GLSL
-}
-
-onMounted(async() => {
+onMounted(async () => {
     const fragmentShaderSource = await fetch('/shaders/fragment.glsl').then(r => r.text())
     const fragmentHoloShaderSource = await fetch('/shaders/holofragment.glsl').then(r => r.text())
     const vertexShaderSource = await fetch('/shaders/vertex.glsl').then(r => r.text())
@@ -127,7 +152,7 @@ function render() {
 
     // Pass mouse position
     gl.uniform2f(mouseLocation, mouse.x, mouse.y);
-    
+
     const timeLocation = gl.getUniformLocation(program, "u_time");
 
     // Pass time
@@ -136,18 +161,69 @@ function render() {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     requestAnimationFrame(render);
 }
+
+
+const handleMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = rect.height - (e.clientY - rect.top); // flip Y for GLSL
+
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Normalize to -1 → 1
+    const px = (mouseX / rect.width) * 2 - 1;
+    const py = (mouseY / rect.height) * 2 - 1;
+
+    // More natural weighting (slightly stronger X tilt)
+    const ROT_X = 10;  // tilt up/down
+    const ROT_Y = 16;  // tilt left/right
+
+    const rX = py * -ROT_X; // invert so top tilts back
+    const rY = px * ROT_Y;
+
+    // Smooth 3D tilt
+    x.set(rX);
+    y.set(rY);
+
+    // Shine/holo moves slower for realism (parallax)
+    bgX.set(50 + px * 20);
+    bgY.set(50 + py * 20);
+
+    // Make rotation softer (fake FRAMER holographic spin)
+    bgRotation.set((px + 1) * 180);
+
+    // Softer shadow (not symmetric)
+    shadowX.set(px * 8);
+    shadowY.set(py * 8);
+};
+
+const handleLeave = () => {
+    x.set(0);
+    y.set(0);
+    bgRotation.set(32);
+    bgX.set(50);
+    bgY.set(50);
+    shadowX.set(0);
+    shadowY.set(0);
+    mouse.x = 0;
+    mouse.y = 0;
+};
 </script>
 
 <template>
-    <div class="sticker-container" @mousemove="onMouseMove">
-        <canvas ref="canvas" width="666px" height="616px"></canvas>
-    </div>
+    <motion.div @pointermove="handleMove" @pointerleave="handleLeave" class="sticker-container relative" :style="{
+        transform: stickerTransform,
+        boxShadow: boxShadow,
+    }">
+        <canvas ref="canvas" width="513px" height="430px"></canvas>
+    </motion.div>
 </template>
 
 <style scoped>
 .sticker-container {
-    width: 666px;
-    height: 616px;
+    width: 513px;
+    height: 430px;
     background-color: black;
 }
 
