@@ -93,7 +93,6 @@ void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
     vec3 backgroundGradient = vec3(1.0);
     vec3 shineColor = vec3(1.0, 1.0, 1.0);
-
     // rotate 180° X-axis
     uv.g = 1.0 - uv.g;
 
@@ -110,5 +109,5 @@ void main() {
     // vec3 finalColor = (base + maskedShine * shineColor) + (backgroundGradient * mask * shineColor);
     vec3 finalColor = base + maskedShine * shineColor;
 
-    gl_FragColor = vec4(1.0 / finalColor , 1.0);
+    gl_FragColor = vec4(finalColor , 1.0);
 }
